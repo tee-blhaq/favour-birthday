@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <title>Happy Birthday | An Elegant Celebration</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Playfair Display & Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        plum: {
+                            950: '#190310',
+                            900: '#2a081a',
+                            800: '#3d0c24',
+                            700: '#5a1538',
+                            600: '#7a1d4c',
+                        },
+                        rosegold: {
+                            light: '#f5d6c6',
+                            DEFAULT: '#e5b583',
+                            dark: '#d49a6a',
+                            deep: '#b8784d',
+                        },
+                        mauve: {
+                            DEFAULT: '#9e5a78',
+                            light: '#c28aa1',
+                        },
+                        champagne: '#f7e7ce',
+                    },
+                    fontFamily: {
+                        serif: ['Playfair Display', 'serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #190310 0%, #2a081a 40%, #3d0c24 75%, #1c0513 100%);
+            min-height: 100vh;
+            color: #f7e7ce;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism elements */
+        .glass-card {
+            background: rgba(42, 8, 26, 0.55);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(229, 181, 131, 0.2);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .glass-card-subtle {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(229, 181, 131, 0.15);
+        }
+
+        /* Metallic Text & Border Effect */
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #f7e7ce 0%, #e5b583 40%, #d49a6a 70%, #f5d6c6 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gold-gradient-border {
+            border-image: linear-gradient(135deg, #e5b583, #9e5a78, #d49a6a) 1;
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, #e5b583 0%, #d49a6a 100%);
+            color: #190310;
+            box-shadow: 0 10px 25px rgba(229, 181, 131, 0.25);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .btn-gold:hover {
+            background: linear-gradient(135deg, #f5d6c6 0%, #e5b583 100%);
+            box-shadow: 0 15px 30px rgba(229, 181, 131, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* Candle Flame */
+        .flame {
+            background: radial-gradient(ellipse at bottom, #fff5cc 0%, #e5b583 40%, #c28aa1 80%, transparent 100%);
+            border-radius: 50% 50% 20% 20%;
+            box-shadow: 0 0 15px #e5b583, 0 0 30px #d49a6a;
+            animation: flicker 0.8s infinite alternate ease-in-out;
+            transform-origin: center bottom;
+        }
+
+        @keyframes flicker {
+            0% { transform: scale(1) rotate(-1.5deg); opacity: 0.9; }
+            100% { transform: scale(1.1) rotate(1.5deg); opacity: 1; filter: drop-shadow(0 0 10px #f5d6c6); }
+        }
+
+        .flame.extinguished {
+            display: none;
+        }
+
+        /* Smoke puff */
+        .smoke {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: rgba(229, 181, 131, 0.6);
+            border-radius: 50%;
+            animation: smokeRise 1.8s forwards ease-out;
+            pointer-events: none;
+        }
+
+        @keyframes smokeRise {
+            0% { opacity: 0.8; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-45px) scale(3.5); filter: blur(5px); }
+        }
+
+        /* Subtle floating particle animation */
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(229, 181, 131, 0.8) 0%, rgba(229, 181, 131, 0) 70%);
+            pointer-events: none;
+            animation: floatParticle 16s infinite linear;
+        }
+
+        @keyframes floatParticle {
+            0% { transform: translateY(100vh) scale(0.3); opacity: 0; }
+            20% { opacity: 0.6; }
+            80% { opacity: 0.6; }
+            100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #190310;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(229, 181, 131, 0.3);
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(229, 181, 131, 0.6);
+        }
+    </style>
+</head>
+<body class="relative min-h-screen flex flex-col justify-between items-center px-4 py-6 md:px-8 md:py-10 selection:bg-rosegold selection:text-plum-950">
+
+    <!-- Ambient Floating Light Particles -->
+    <div id="particle-container" class="fixed inset-0 pointer-events-none z-0 overflow-hidden"></div>
+
+    <!-- Background Lighting Halos -->
+    <div class="fixed top-1/4 left-10 w-96 h-96 bg-plum-700/20 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="fixed bottom-10 right-10 w-96 h-96 bg-rosegold-deep/10 rounded-full blur-3xl pointer-events-none"></div>
+
+    <!-- Header Navigation -->
+    <header class="w-full max-w-5xl flex justify-between items-center z-10 py-3 px-4 glass-card rounded-2xl mb-8">
+        <div class="flex items-center gap-3">
+            <span class="w-2.5 h-2.5 rounded-full bg-rosegold animate-pulse"></span>
+            <span class="font-serif italic text-lg sm:text-xl font-semibold gold-gradient-text tracking-wide">
+                Celebration Edition
+            </span>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <!-- Audio Toggle Button -->
+            <button id="music-btn" onclick="toggleAudio()" class="px-4 py-2 rounded-xl glass-card-subtle hover:border-rosegold/40 text-xs sm:text-sm font-medium transition-all duration-300 flex items-center gap-2 text-champagne/90">
+                <i id="music-icon" class="fas fa-music text-rosegold"></i>
+                <span id="music-text" class="hidden sm:inline">Play Melody</span>
+            </button>
+
+            <!-- Personalize Button -->
+            <button onclick="openEditModal()" class="px-4 py-2 rounded-xl glass-card-subtle hover:border-rosegold/40 text-xs sm:text-sm font-medium transition-all duration-300 flex items-center gap-2 text-champagne/90">
+                <i class="fas fa-sliders-h text-rosegold"></i>
+                <span class="hidden sm:inline">Customize</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="w-full max-w-5xl z-10 space-y-12 my-auto">
+        
+        <!-- Hero Section -->
+        <section class="glass-card rounded-3xl p-8 sm:p-12 md:p-16 text-center relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-rosegold to-transparent opacity-60"></div>
+
+            <p class="text-rosegold font-sans text-xs sm:text-sm tracking-[0.3em] uppercase font-semibold mb-4">
+                ✦ Celebrating an Extraordinary Life ✦
+            </p>
+
+            <h1 class="font-serif text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold leading-tight mb-6">
+                Happy Birthday,<br>
+                <span id="hero-name" class="gold-gradient-text italic font-normal">
+                    Favour
+                </span>
+            </h1>
+
+            <p id="hero-tagline" class="text-champagne/80 text-base sm:text-lg md:text-xl max-w-2xl mx-auto font-light leading-relaxed mb-8">
+                To a phenomenal woman whose grace, strength, and warmth illuminate every room she enters. Here's to your brilliance today and always.
+            </p>
+
+            <!-- Action Buttons Row -->
+            <div class="flex flex-wrap items-center justify-center gap-4 pt-2">
+                <!-- Open Epistle Button -->
+                <button onclick="openEpistleModal()" class="btn-gold px-7 py-3.5 rounded-full font-semibold text-sm sm:text-base flex items-center gap-3">
+                    <i class="fas fa-envelope-open-text text-base"></i>
+                    Read Our Journey (2024 – Forever)
+                </button>
+
+                <!-- Confetti Button -->
+                <button onclick="triggerRoseGoldConfetti()" class="px-7 py-3.5 rounded-full glass-card-subtle hover:border-rosegold/50 text-champagne text-sm sm:text-base font-medium flex items-center gap-2 transition-all duration-300 active:scale-95">
+                    <i class="fas fa-sparkles text-rosegold"></i>
+                    Toast & Confetti
+                </button>
+            </div>
+        </section>
+
+        <!-- Two Column Grid: Photo Memory & Candle Interactive -->
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+            
+            <div class="glass-card rounded-3xl p-6 sm:p-8 flex flex-col items-center justify-between relative group">
+                <div class="w-full text-center mb-4">
+                    <span class="text-xs uppercase tracking-widest text-rosegold font-semibold">Captured Memories</span>
+                    <h3 class="font-serif text-2xl text-champagne font-semibold mt-1">A Moment in Time</h3>
+                </div>
+
+                <!-- Memory Photo Frame Container -->
+                <div class="relative w-full max-w-xs aspect-[4/5] bg-plum-950 p-4 rounded-2xl border border-rosegold/30 shadow-2xl flex flex-col items-center justify-between group-hover:border-rosegold/60 transition-all duration-500 my-2">
+                    <div id="photo-wrapper" class="w-full h-full rounded-xl overflow-hidden relative bg-plum-900/60 flex items-center justify-center border border-white/5">
+                        <img id="memory-img" src="image/IMG_3726.JPG" alt="Birthday Memory" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" onerror="this.onerror=null; this.src='https://placehold.co/600x800/2a081a/e5b583?text=Special+Moment';">
+                    </div>
+                    
+                    <div class="w-full text-center pt-3 pb-1">
+                        <p id="photo-caption" class="font-serif italic text-sm text-rosegold-light">"Elegance is the only beauty that never fades."</p>
+                    </div>
+                </div>
+
+                <!-- Upload / Custom Photo Control -->
+                <div class="w-full flex justify-center mt-4">
+                    <label class="cursor-pointer text-xs font-semibold px-4 py-2 rounded-xl glass-card-subtle hover:border-rosegold/40 text-rosegold flex items-center gap-2 transition-all">
+                        <i class="fas fa-camera"></i>
+                        <span>Change Photo</span>
+                        <input type="file" id="image-upload" accept="image/*" class="hidden" onchange="handleImageUpload(event)">
+                    </label>
+                </div>
+            </div>
+
+            <div class="glass-card rounded-3xl p-6 sm:p-8 flex flex-col items-center justify-between text-center relative">
+                <div class="w-full">
+                    <span class="text-xs uppercase tracking-widest text-rosegold font-semibold">Birthday Wish</span>
+                    <h3 class="font-serif text-2xl text-champagne font-semibold mt-1">Make a Wish</h3>
+                    <p class="text-xs text-champagne/70 mt-1">Tap the candle flame to blow it out and make your wish.</p>
+                </div>
+
+                <!-- Stylized Cake Illustration -->
+                <div class="my-8 cursor-pointer select-none group" onclick="extinguishCandle()" title="Tap to blow out candle">
+                    <!-- Candle -->
+                    <div class="relative flex flex-col items-center justify-center z-10 -mb-2">
+                        <div id="flame" class="flame w-4 h-7 mb-1"></div>
+                        <div class="w-3.5 h-12 bg-gradient-to-b from-rosegold-light via-rosegold to-rosegold-deep rounded-t-sm shadow-inner border-t border-white/40"></div>
+                    </div>
+
+                    <!-- Cake Tier Top -->
+                    <div class="w-48 sm:w-56 h-10 bg-gradient-to-r from-plum-800 via-mauve to-plum-800 rounded-t-2xl border-t border-rosegold/40 shadow-lg relative overflow-hidden flex items-center justify-around px-4">
+                        <div class="w-3 h-3 rounded-full bg-rosegold/40"></div>
+                        <div class="w-3 h-3 rounded-full bg-rosegold/40"></div>
+                        <div class="w-3 h-3 rounded-full bg-rosegold/40"></div>
+                        <div class="w-3 h-3 rounded-full bg-rosegold/40"></div>
+                    </div>
+
+                    <!-- Cake Tier Base -->
+                    <div class="w-56 sm:w-64 h-14 bg-gradient-to-r from-plum-900 via-plum-800 to-plum-900 rounded-b-2xl border-t border-rosegold/20 shadow-2xl flex items-center justify-center relative">
+                        <div class="w-full h-1 bg-rosegold/30"></div>
+                    </div>
+
+                    <!-- Cake Plate -->
+                    <div class="w-64 sm:w-72 h-3.5 bg-gradient-to-r from-rosegold-dark via-champagne to-rosegold-dark rounded-full shadow-2xl -mt-1 mx-auto"></div>
+                </div>
+
+                <!-- Status Feedback -->
+                <div id="wish-status" class="text-xs font-medium text-rosegold italic">
+                    <i class="fas fa-sparkles mr-1"></i> The flame is glowing with warmth...
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="z-10 text-center text-xs text-champagne/40 py-6 mt-8">
+        Crafted with elegance & genuine care • Celebrating You
+    </footer>
+
+    <div id="epistle-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md hidden opacity-0 transition-opacity duration-500 p-4 sm:p-6">
+        <div class="glass-card rounded-3xl max-w-3xl w-full max-h-[90vh] flex flex-col relative border border-rosegold/30 shadow-2xl overflow-hidden transform scale-95 transition-transform duration-500" id="epistle-card">
+            
+            <!-- Modal Header -->
+            <div class="p-6 sm:p-8 border-b border-rosegold/20 flex justify-between items-center bg-plum-950/40">
+                <div>
+                    <span class="text-xs font-semibold uppercase tracking-[0.25em] text-rosegold">Our Narrative</span>
+                    <h2 class="font-serif text-2xl sm:text-3xl font-bold gold-gradient-text mt-0.5">The Story of Us (2024 – 2026)</h2>
+                </div>
+                <button onclick="closeEpistleModal()" class="w-10 h-10 rounded-full glass-card-subtle hover:border-rosegold/50 text-champagne/80 hover:text-white flex items-center justify-center transition-all">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <!-- Scrollable Epistle Content -->
+            <div class="p-6 sm:p-10 overflow-y-auto space-y-8 font-light leading-relaxed text-champagne/90 text-sm sm:text-base">
+                
+                <div class="border-l-2 border-rosegold/40 pl-4 italic text-rosegold-light text-base sm:text-lg font-serif">
+                    "True friendship isn't about being inseparable; it's about being separated and knowing nothing changes."
+                </div>
+
+                <!-- Dynamic Epistle Text -->
+                <div id="epistle-body-text" class="space-y-6">
+                    <p>
+                        Dearest <span class="font-semibold text-rosegold" id="epistle-name-1">Sophia</span>,
+                    </p>
+                    <p>
+                        Thinking back to  <strong class="text-rosegold font-semibold">2024</strong>2024 when we actually started talking—I definitely didn’t predict you’d end up becoming one of my favorite people.
+                    </p>
+
+                    <!-- Timeline Item 2024 -->
+                    <div class="p-5 rounded-2xl glass-card-subtle border-l-4 border-rosegold space-y-2">
+                        <div class="text-xs uppercase font-bold tracking-widest text-rosegold">Chapter I • 2024</div>
+                        <h4 class="font-serif font-semibold text-lg text-champagne">The Beginning & Unfiltered Conversations</h4>
+                        <p class="text-xs sm:text-sm text-champagne/80">
+                            We discovered how effortlessly we could talk about everything and nothing at all. You showed me what genuine empathy and unmatched grace look like in real time.
+                        </p>
+                    </div>
+
+                    <!-- Timeline Item 2025 -->
+                    <div class="p-5 rounded-2xl glass-card-subtle border-l-4 border-mauve space-y-2">
+                        <div class="text-xs uppercase font-bold tracking-widest text-mauve-light">Chapter II • 2025</div>
+                        <h4 class="font-serif font-semibold text-lg text-champagne">Growth & Laughter</h4>
+                        <p class="text-xs sm:text-sm text-champagne/80">
+                            2025 had its fair share of moments, but having you around made everything a whole lot easier (and funnier). Your wisdom, style, and subtle humor never go unnoticed. Top-tier friend, for sure.
+                        </p>
+                    </div>
+
+                    <!-- Timeline Item 2026 -->
+                    <div class="p-5 rounded-2xl glass-card-subtle border-l-4 border-champagne space-y-2">
+                        <div class="text-xs uppercase font-bold tracking-widest text-champagne">Chapter III • Today & Beyond</div>
+                        <h4 class="font-serif font-semibold text-lg text-champagne">Honoring the Woman You Are</h4>
+                        <p class="text-xs sm:text-sm text-champagne/80">
+                            Today, as we celebrate your birthday, I want to remind you of how extraordinary you are. May this new personal chapter bring you boundless joy, peace, success, and love that matches the depth of your own heart.
+                        </p>
+                    </div>
+
+                    <p>
+                        Thank you for being such an irreplaceable friend since 2024. Here is to celebrating you today, tomorrow, and for all the years yet to come.
+                    </p>
+
+                    <div class="pt-4 text-right font-serif italic text-rosegold text-lg">
+                        Forever your dear friend 🥂
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="p-4 sm:p-6 border-t border-rosegold/20 bg-plum-950/40 flex justify-end gap-3">
+                <button onclick="closeEpistleModal()" class="btn-gold px-6 py-2.5 rounded-xl font-semibold text-sm">
+                    Close Epistle
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="edit-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md hidden opacity-0 transition-opacity duration-300 p-4">
+        <div class="glass-card rounded-3xl p-6 sm:p-8 max-w-lg w-full relative border border-rosegold/30">
+            <button onclick="closeEditModal()" class="absolute top-4 right-4 text-champagne/60 hover:text-white p-2">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <h3 class="font-serif text-2xl font-bold gold-gradient-text mb-2">Customize Experience</h3>
+            <p class="text-xs text-champagne/70 mb-6">Tailor the name, message, and story for your friend.</p>
+
+            <form onsubmit="saveCustomSettings(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-rosegold mb-1">Friend's Name</label>
+                    <input type="text" id="input-friend-name" class="w-full px-4 py-2.5 rounded-xl bg-plum-950/80 border border-rosegold/30 text-champagne focus:outline-none focus:border-rosegold text-sm">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-rosegold mb-1">Hero Tagline / Greeting</label>
+                    <textarea id="input-hero-tagline" rows="2" class="w-full px-4 py-2.5 rounded-xl bg-plum-950/80 border border-rosegold/30 text-champagne focus:outline-none focus:border-rosegold text-sm resize-none"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-rosegold mb-1">Photo Caption</label>
+                    <input type="text" id="input-photo-caption" class="w-full px-4 py-2.5 rounded-xl bg-plum-950/80 border border-rosegold/30 text-champagne focus:outline-none focus:border-rosegold text-sm">
+                </div>
+
+                <div class="pt-2 flex gap-3">
+                    <button type="submit" class="flex-1 btn-gold py-3 rounded-xl font-semibold text-sm">
+                        Apply Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-6 py-3 rounded-full glass-card border border-rosegold/40 text-champagne text-xs sm:text-sm font-medium shadow-2xl transition-all duration-300 transform translate-y-20 opacity-0 flex items-center gap-2">
+        <i class="fas fa-sparkles text-rosegold"></i>
+        <span id="toast-text">Notification message</span>
+    </div>
+
+    <script>
+        // Global Application State
+        let appState = {
+            name: "Sophia",
+            tagline: "To a phenomenal woman whose grace, strength, and warmth illuminate every room she enters. Here's to your brilliance today and always.",
+            caption: '"Elegance is the only beauty that never fades."',
+            candleBlown: false,
+            audioPlaying: false
+        };
+
+        // Web Audio Synthesizer variables
+        let audioCtx = null;
+        let activeNodes = [];
+        let melodyTimeout = null;
+
+        window.onload = function() {
+            createAmbientParticles();
+            loadStateFromURL();
+        };
+
+        // --- Ambient Background Particles ---
+        function createAmbientParticles() {
+            const container = document.getElementById('particle-container');
+            const particleCount = 18;
+
+            for (let i = 0; i < particleCount; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                
+                const size = Math.random() * 8 + 4; // 4px to 12px
+                const left = Math.random() * 100; // 0 to 100vw
+                const delay = Math.random() * 12;
+                const duration = Math.random() * 10 + 12; // 12s to 22s
+
+                p.style.width = `${size}px`;
+                p.style.height = `${size}px`;
+                p.style.left = `${left}vw`;
+                p.style.animationDelay = `${delay}s`;
+                p.style.animationDuration = `${duration}s`;
+
+                container.appendChild(p);
+            }
+        }
+
+        // --- URL State & DOM Updates ---
+        function loadStateFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('name')) appState.name = params.get('name');
+            if (params.get('tagline')) appState.tagline = params.get('tagline');
+
+            updateDOM();
+        }
+
+        function updateDOM() {
+            document.getElementById('hero-name').innerText = appState.name;
+            document.getElementById('hero-tagline').innerText = appState.tagline;
+            document.getElementById('photo-caption').innerText = appState.caption;
+
+            // Update epistle names
+            document.getElementById('epistle-name-1').innerText = appState.name;
+
+            // Input field values
+            document.getElementById('input-friend-name').value = appState.name;
+            document.getElementById('input-hero-tagline').value = appState.tagline;
+            document.getElementById('input-photo-caption').value = appState.caption;
+        }
+
+        // --- Photo Upload Handling ---
+        function handleImageUpload(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    document.getElementById('memory-img').src = event.target.result;
+                    showToast("Photo updated elegantly!");
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // --- Rose-Gold Confetti Burst ---
+        function triggerRoseGoldConfetti() {
+            if (typeof confetti !== 'undefined') {
+                const colors = ['#e5b583', '#d49a6a', '#f5d6c6', '#9e5a78', '#f7e7ce'];
+                
+                // Elegant center shower
+                confetti({
+                    particleCount: 70,
+                    spread: 80,
+                    origin: { y: 0.6 },
+                    colors: colors
+                });
+
+                // Subtle delayed side cannons
+                setTimeout(() => {
+                    confetti({
+                        particleCount: 40,
+                        angle: 60,
+                        spread: 50,
+                        origin: { x: 0 },
+                        colors: colors
+                    });
+                    confetti({
+                        particleCount: 40,
+                        angle: 120,
+                        spread: 50,
+                        origin: { x: 1 },
+                        colors: colors
+                    });
+                }, 250);
+            }
+        }
+
+        // --- Candle Blow Interaction ---
+        function extinguishCandle() {
+            const flame = document.getElementById('flame');
+            const status = document.getElementById('wish-status');
+
+            if (!appState.candleBlown) {
+                flame.classList.add('extinguished');
+                
+                // Create smoke puff effect
+                for (let i = 0; i < 4; i++) {
+                    const smoke = document.createElement('div');
+                    smoke.className = 'smoke';
+                    smoke.style.left = (Math.random() * 8 - 4) + 'px';
+                    flame.parentElement.appendChild(smoke);
+                    setTimeout(() => smoke.remove(), 1800);
+                }
+
+                appState.candleBlown = true;
+                status.innerHTML = '<span class="text-champagne font-semibold"><i class="fas fa-check-circle text-rosegold mr-1"></i> Wish blown into the stars ✨</span>';
+                
+                triggerRoseGoldConfetti();
+                showToast("Your wish has been made ✨");
+            }
+        }
+
+        // --- Modals Logic ---
+        function openEpistleModal() {
+            const modal = document.getElementById('epistle-modal');
+            const card = document.getElementById('epistle-card');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                card.classList.remove('scale-95');
+            }, 10);
+        }
+
+        function closeEpistleModal() {
+            const modal = document.getElementById('epistle-modal');
+            const card = document.getElementById('epistle-card');
+            modal.classList.add('opacity-0');
+            card.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 500);
+        }
+
+        function openEditModal() {
+            const modal = document.getElementById('edit-modal');
+            modal.classList.remove('hidden');
+            setTimeout(() => modal.classList.remove('opacity-0'), 10);
+        }
+
+        function closeEditModal() {
+            const modal = document.getElementById('edit-modal');
+            modal.classList.add('opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        function saveCustomSettings(e) {
+            e.preventDefault();
+            const inputName = document.getElementById('input-friend-name').value.trim();
+            const inputTagline = document.getElementById('input-hero-tagline').value.trim();
+            const inputCaption = document.getElementById('input-photo-caption').value.trim();
+
+            if (inputName) appState.name = inputName;
+            if (inputTagline) appState.tagline = inputTagline;
+            if (inputCaption) appState.caption = inputCaption;
+
+            updateDOM();
+            closeEditModal();
+            showToast("Settings updated successfully!");
+        }
+
+        // --- Notification Toast ---
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastText = document.getElementById('toast-text');
+
+            toastText.innerText = message;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3200);
+        }
+
+     // --- Song playback ---
+const song = new Audio('Anendlessocean.mp3');  // file path — see note below
+song.loop = true;
+song.volume = 0.6;
+
+function toggleAudio() {
+    const icon = document.getElementById('music-icon');
+    const text = document.getElementById('music-text');
+
+    if (appState.audioPlaying) {
+        song.pause();
+        appState.audioPlaying = false;
+        icon.className = "fas fa-music text-rosegold";
+        text.innerText = "Play Song";
+        return;
+    }
+
+    song.play().then(() => {
+        appState.audioPlaying = true;
+        icon.className = "fas fa-volume-up text-rosegold animate-pulse";
+        text.innerText = "Mute Song";
+        showToast("🎵 Now playing: Eden — anendlessocean");
+    }).catch(err => {
+        console.error('Playback failed:', err);
+        showToast("Couldn't play the track — check the file name and path.");
+    });
+}
+
+song.addEventListener('ended', () => {
+    appState.audioPlaying = false;
+    document.getElementById('music-icon').className = "fas fa-music text-rosegold";
+    document.getElementById('music-text').innerText = "Play Song";
+});
+
+// Reset the button if the song ends (only matters if you remove loop)
+document.getElementById('song').addEventListener('ended', () => {
+    appState.audioPlaying = false;
+    document.getElementById('music-icon').className = "fas fa-music text-rosegold";
+    document.getElementById('music-text').innerText = "Play Song";
+});
+    </script>
+</body>
+</html>
